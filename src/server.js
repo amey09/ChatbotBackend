@@ -7,12 +7,20 @@ import userRoutes from "./routes/userRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import express from "express";
 import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
+import cors from "cors";
 
 const port = process.env.PORT || 5000;
 
 connectDB();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
