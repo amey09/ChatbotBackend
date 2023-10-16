@@ -12,6 +12,9 @@ const sessionSchema = mongoose.Schema({
   wardenName: {
     type: String,
   },
+  clientName: {
+    type: String,
+  },
   datetime: {
     type: Date,
     required: true,
