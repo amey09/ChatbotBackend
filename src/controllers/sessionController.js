@@ -42,7 +42,7 @@ const createSession = asyncHandler(async (req, res) => {
 });
 
 const bookSession = asyncHandler(async (req, res) => {
-  const { sessionID } = req.body;
+  const { sessionID, mode, datetime } = req.body;
 
   const user = await User.findOne({ _id: req.user._id });
   if (!user) {
@@ -55,13 +55,24 @@ const bookSession = asyncHandler(async (req, res) => {
     });
   }
 
-  if (user.isWarden) {
-    res.status(403);
-    throw new Error("Wardens are not allowed to book sessions");
+  const updateFields = {};
+
+  if (mode) {
+    updateFields.mode = mode;
   }
 
+  if (datetime) {
+    updateFields.datetime = datetime;
+  }
+
+  if (!user.isWarden) {
+    updateFields.uuid = user._id;
+    updateFields.clientName = user.name;
+  }
+
+
   try {
-    await Session.updateOne({ _id: sessionID }, { $set: { uuid: user._id } });
+    await Session.updateOne({ _id: sessionID }, { $set: updateFields });
   } catch (error) {
     res.status(500);
     throw new Error("Internal Server Error");
@@ -116,6 +127,7 @@ const getSessions = asyncHandler(async (req, res) => {
           if (availableSessions.length > 0) {
             res.status(200).json({
               message: "No booked sessions found",
+              bookedSessions,
               availableSessions,
             });
           } else {
@@ -161,6 +173,8 @@ const getSessions = asyncHandler(async (req, res) => {
           });
         } else {
           res.status(200).json({
+            message: "No upcoming Sessions found",
+            upComingSessions,
             unBookedSessions: unBookedSessions,
           });
         }
