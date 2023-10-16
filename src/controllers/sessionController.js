@@ -3,7 +3,7 @@ import User from "../models/userModel.js";
 import asyncHandler from "express-async-handler";
 
 const createSession = asyncHandler(async (req, res) => {
-  const { datetime } = req.body;
+  const { datetime, mode } = req.body;
 
   const user = await User.findOne({ _id: req.user._id });
 
@@ -16,9 +16,10 @@ const createSession = asyncHandler(async (req, res) => {
   const session = await Session.create({
     wardenID: req.user._id,
     wardenName: user.name,
+    clientName: null,
     uuid: null,
     datetime: datetime,
-    mode: null,
+    mode: mode ? mode : null
   });
 
   if (session) {
@@ -29,8 +30,9 @@ const createSession = asyncHandler(async (req, res) => {
         uuid: session.uuid,
         wardenID: session.wardenID,
         wardenName: session.wardenName,
+        clientName: session.clientName,
         datetime: session.datetime,
-        Mode: session.mode,
+        mode: session.mode,
       },
     });
   } else {
