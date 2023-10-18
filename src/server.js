@@ -17,7 +17,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://chatbot-session-scheduler-cnsi3hxcy-amey-mhatres-projects.vercel.app',
+    origin: process.env.ALLOWED_ORIGIN,
     credentials: true,
   })
 );
