@@ -150,7 +150,7 @@ const getSessions = asyncHandler(async (req, res) => {
             { wardenID: uuid },
             { datetime: { $gte: currentDate } },
           ],
-        }).sort({ datetime: 1 });;
+        }).sort({ datetime: 1 });
         const upComingSessions = await Session.find({
           $and: [
             { uuid: { $ne: null } },
