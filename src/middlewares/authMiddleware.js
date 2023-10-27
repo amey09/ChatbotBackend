@@ -5,10 +5,12 @@ import User from "../models/userModel.js";
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-  token = req.cookies.jwt;
+  const authorizationHeader = req.headers.authorization;
 
-  if (token) {
+  if (authorizationHeader && authorizationHeader.startsWith("Bearer")) {
     try {
+      token = authorizationHeader.split(" ")[1];
+
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       req.user = await User.findById(decoded.userId).select("-password");

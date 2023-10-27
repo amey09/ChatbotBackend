@@ -7,13 +7,13 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    generateToken(res, user._id);
-
-    res.json({
+    const token = generateToken(user._id);
+    res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
       isWarden: user.isWarden,
+      token: token,
     });
   } else {
     res.status(401);
@@ -57,12 +57,4 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-const logoutUser = (req, res) => {
-  res.cookie("jwt", "", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
-  res.status(200).json({ message: "Logged out successfully" });
-};
-
-export { authUser, registerUser, logoutUser };
+export { authUser, registerUser };
