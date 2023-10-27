@@ -16,6 +16,7 @@ connectDB();
 const app = express();
 
 const allowedOrigins = [
+    process.env.ALLOWED_ORIGIN,
     process.env.ALLOWED_ORIGIN_MAIN,
     process.env.ALLOWED_ORIGIN_SECONDARY,
     process.env.ALLOWED_ORIGIN_TERTIARY,
@@ -25,7 +26,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: allowedOrigins,
-    credentials: true,
+
   })
 );
 
